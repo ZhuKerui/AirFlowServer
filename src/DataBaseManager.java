@@ -33,7 +33,9 @@ public class DataBaseManager {
 			PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM USER_INFO WHERE USER_NAME = ?");
 			pstmt.setString(1, user_name);
 			ResultSet rs = pstmt.executeQuery();
-			return rs.next();
+			boolean exist = rs.next();
+			rs.close();
+			return exist;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -43,12 +45,25 @@ public class DataBaseManager {
 	
 	public boolean addUser(String user_name) {
 		try {
-			PreparedStatement pstmt = connection.prepareStatement("CREATE TABLE ?(USER_NAME, VARCHAR(50))");
+			String create_table = "CREATE TABLE " + user_name + "(USER_NAME VARCHAR(50))";
+			statement.executeUpdate(create_table);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		try {
+			PreparedStatement pstmt = connection.prepareStatement("INSERT INTO USER_INFO VALUES(?)");
 			pstmt.setString(1, user_name);
 			pstmt.executeUpdate();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			try {
+				String delete_table = "DROP TABLE " + user_name;
+				statement.executeUpdate(delete_table);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
 			return false;
 		}
 	}
@@ -56,5 +71,20 @@ public class DataBaseManager {
 	public boolean isValid() {
 		return 	connection != null 
 				&& statement != null;
+	}
+	
+	public void close() {
+		try {
+			if (statement != null) {
+				statement.close();
+			}
+			if (connection != null) {
+				connection.close();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
 	}
 }

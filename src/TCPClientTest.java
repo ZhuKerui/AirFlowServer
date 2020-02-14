@@ -13,7 +13,7 @@ public class TCPClientTest {
 		OutputStream oStream = socket.getOutputStream();
 		JSONObject msg = new JSONObject();
 		msg.put(Common.PacketParams.OPERATION, Common.Operation.LOGIN);
-		msg.put(Common.PacketParams.USER_NAME, "kerui");
+		msg.put(Common.PacketParams.USER_NAME, "kerui_2");
 		oStream.write(msg.toString().getBytes());
 		socket.shutdownOutput();
 		
@@ -27,14 +27,24 @@ public class TCPClientTest {
 		socket.shutdownInput();
 		String input_txt = buffer.toString();
 		JSONObject msgInJsonObject = JSONObject.fromObject(input_txt);
+		
 		if (msgInJsonObject.getInt(Common.PacketParams.INSTRUCTION) == Common.Instruction.APPROVED) {
-			System.out.println("³É¹¦");
-		}else if (msgInJsonObject.getInt(Common.PacketParams.ERRORCODE) == Common.ErrorCode.NON_EXIST_USER) {
-			System.out.println("ÓÃ»§²»´æÔÚ");
-		}else if (msgInJsonObject.getInt(Common.PacketParams.ERRORCODE) == Common.ErrorCode.SERVER_ERROR) {
-			System.out.println("·şÎñÆ÷¶Ë´íÎó");
+			System.out.println("æˆåŠŸ");
 		}else {
-			System.out.println("Ê²Ã´¹í");
+			switch (msgInJsonObject.getInt(Common.PacketParams.ERRORCODE)) {
+				case Common.ErrorCode.NON_EXIST_USER:
+					System.out.println("ç”¨æˆ·ä¸å­˜åœ¨");
+					break;
+				case Common.ErrorCode.NAME_OCCUPIED:
+					System.out.println("ç”¨æˆ·å·²æ³¨å†Œ");
+					break;
+				case Common.ErrorCode.SERVER_ERROR:
+					System.out.println("æœåŠ¡å™¨ç«¯é”™è¯¯");
+					break;
+				default:
+					System.out.println("ä»€ä¹ˆé¬¼");
+					break;
+			}
 		}
 		socket.close();
 	}

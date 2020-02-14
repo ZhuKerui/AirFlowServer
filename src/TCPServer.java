@@ -90,6 +90,9 @@ class MsgHandler extends Thread {
 						break;
 				}
 			}
+			
+			dataBase.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {
