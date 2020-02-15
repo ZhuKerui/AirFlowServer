@@ -5,7 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 
+import com.mysql.cj.jdbc.Blob;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 
@@ -14,6 +18,11 @@ public class TCPServer {
 	private static ServerSocket myServerSocket;
 
 	public static void main(String[] args) {
+		
+		if (!DataBaseManager.initDataBase()) {
+			return;
+		}
+		
 		try {
 			myServerSocket = new ServerSocket(Common.Norms.SERVER_PORT);
 			while (true) {
@@ -53,7 +62,6 @@ class MsgHandler extends Thread {
 			while ((len = iStream.read(input_byte)) != -1) {
 				buffer.write(input_byte, 0, len);
 			}
-			mySocket.shutdownInput();
 			
 			String input_txt = buffer.toString();
 			JSONObject msgInJsonObject = JSONObject.fromObject(input_txt);
@@ -83,7 +91,29 @@ class MsgHandler extends Thread {
 						}
 						break;
 					case Common.Operation.UPLOAD:
-						
+						int packet_num = msgInJsonObject.getInt(Common.PacketParams.PACKET_NUM);
+						JSONArray packets = msgInJsonObject.getJSONArray(Common.PacketParams.PACKETS);
+						int i;
+						for (i = 0; i < packet_num; i++) {
+							try {
+								JSONObject object = packets.getJSONObject(i);
+								Blob blob = dataBase.getBlob();
+								OutputStream os = blob.setBinaryStream(1);
+								os.write((byte[])object.get(Common.PacketParams.AIRFLOW_DATA));
+								os.close();
+								if (!dataBase.insertData(user_name, blob))
+									break;
+								
+							} catch (SQLException e) {
+								e.printStackTrace();
+								break;
+							}
+						}
+						if (i== packet_num) {
+							returnSuccess();
+						}else {
+							returnError(Common.ErrorCode.SERVER_ERROR);
+						}
 						break;
 	
 					default:

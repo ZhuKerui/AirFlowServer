@@ -24,7 +24,6 @@ public class TCPClientTest {
 		while ((len = iStream.read(input_byte)) != -1) {
 			buffer.write(input_byte, 0, len);
 		}
-		socket.shutdownInput();
 		String input_txt = buffer.toString();
 		JSONObject msgInJsonObject = JSONObject.fromObject(input_txt);
 		

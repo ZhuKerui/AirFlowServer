@@ -5,19 +5,19 @@ public class Common {
 	}
 	
 	public class PacketParams {
-        public static final String USER_NAME = "user_name";
-        public static final String PASSWORD = "password";
-        public static final String ERRORCODE = "error";
-        public static final String INSTRUCTION = "instruction";
+		public static final String USER_NAME = "user_name";
         public static final String OPERATION = "operation";
-        public static final String DATA = "data";
+        public static final String PACKET_NUM = "packet_num";
+        public static final String PACKETS = "packets";
+        public static final String AIRFLOW_DATA = "airflow_data";
+        public static final String INSTRUCTION = "instruction";
+        public static final String ERRORCODE = "error";
     }
 
     public class ErrorCode {
         public static final int NON_EXIST_USER = 0;
         public static final int NAME_OCCUPIED = 1;
-        public static final int WRONG_PASSWORD = 2;
-        public static final int SERVER_ERROR = 3;
+        public static final int SERVER_ERROR = 2;
     }
 
     public class Instruction {
