@@ -34,12 +34,14 @@ public class DataBaseManager {
 			for (String table : table_list) {
 				stmt.executeUpdate("DROP TABLE " + table);
 			}
+			System.out.println("cleared");
 			
 			stmt.executeUpdate("CREATE TABLE USER_INFO(USER_NAME VARCHAR(50))");
 			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO USER_INFO VALUES(?)");
 			pstmt.setString(1, "_default");
 			pstmt.executeUpdate();
 			stmt.executeUpdate("CREATE TABLE _default(AIR_FLOW_DATA BLOB)");
+			System.out.println("created");
 			
 			pstmt.close();
 			stmt.close();

@@ -99,7 +99,7 @@ class MsgHandler extends Thread {
 								JSONObject object = packets.getJSONObject(i);
 								Blob blob = dataBase.getBlob();
 								OutputStream os = blob.setBinaryStream(1);
-								os.write((byte[])object.get(Common.PacketParams.AIRFLOW_DATA));
+								os.write(object.getString(Common.PacketParams.AIRFLOW_DATA).getBytes());
 								os.close();
 								if (!dataBase.insertData(user_name, blob))
 									break;
