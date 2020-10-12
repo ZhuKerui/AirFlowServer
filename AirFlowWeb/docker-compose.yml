@@ -25,6 +25,7 @@ services:
             - database
         volumes: 
             - ./webapp:/code
+            - ./dbManager:/dbManager
         ports:
             - "8080:80"
         networks:
@@ -42,8 +43,9 @@ services:
             - database
         volumes: 
             - ./ServerSocket:/code
+            - ./dbManager:/dbManager
         ports:
-            - "8081:80"
+            - "7777:80"
         networks:
             - webnet
 

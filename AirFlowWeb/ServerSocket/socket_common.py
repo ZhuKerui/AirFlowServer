@@ -1,5 +1,5 @@
 SERVER_ADDR = '127.0.0.1'
-SERVER_PORT = 7777
+SERVER_PORT = 80
 
 class PacketParams:
     USER_NAME = "user_name"
